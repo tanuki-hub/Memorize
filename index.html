@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">  
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">  
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>タイピング練習</title>
@@ -79,9 +79,9 @@
         // ボタンをクリックしたときの処理
         startButton.addEventListener('click', startTyping);
 
-        // Ctrl+Eでもスタート
+        // Ctrl+スペースでもスタート
         document.addEventListener('keydown', (event) => {
-            if (event.ctrlKey && event.key === ' ') {
+            if (event.ctrlKey && event.code === 'Space') { // 修正: event.code を使用
                 event.preventDefault();
                 startTyping();
             }
