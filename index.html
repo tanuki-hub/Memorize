@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">  
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">  
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>タイピング練習</title>
@@ -38,28 +38,53 @@
         .invisible {
             visibility: hidden;
         }
+        .result {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .correct {
+            color: #4caf50;
+        }
+        .incorrect {
+            color: #f44336;
+        }
     </style>
 </head>
 <body>
     <textarea id="originalText" placeholder="上に文章を入力してください"></textarea>
     <button id="startButton">スタート</button>
     <textarea id="inputText" placeholder="ここに入力してください" disabled></textarea>
+    <div id="result" class="result"></div>
 
     <script>
         const originalTextArea = document.getElementById('originalText');
         const inputTextArea = document.getElementById('inputText');
         const startButton = document.getElementById('startButton');
+        const resultDiv = document.getElementById('result');
 
         let originalText = '';
 
-        // ボタンをクリックしたときの処理
-        startButton.addEventListener('click', () => {
+        // スタート処理
+        function startTyping() {
             originalText = originalTextArea.value.trimEnd().replace(/“|”/g, '"'); // 上のテキストを取得し、末尾のスペースを削除し、“を"に変換
             originalTextArea.value = originalText; // 更新されたテキストを反映
             originalTextArea.classList.add('invisible'); // 上のテキストを見えなくする
             inputTextArea.value = ''; // 下のテキストボックスをクリア
             inputTextArea.disabled = false; // 下のテキストボックスを有効化
             inputTextArea.focus();
+            resultDiv.textContent = ''; // 結果をクリア
+        }
+
+        // ボタンをクリックしたときの処理
+        startButton.addEventListener('click', startTyping);
+
+        // Ctrl+Eでもスタート
+        document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.key === 'e') {
+                event.preventDefault();
+                startTyping();
+            }
         });
 
         // 入力中の判定
@@ -70,13 +95,15 @@
 
             if (!normalizedOriginal.startsWith(normalizedInput)) {
                 // 間違った場合
-                alert('入力が間違っています。やり直してください。');
+                resultDiv.textContent = '× 不正解です。やり直してください。';
+                resultDiv.className = 'result incorrect';
                 originalTextArea.classList.remove('invisible'); // 上のテキストを再び見えるように
                 inputTextArea.value = ''; // 下のテキストボックスをクリア
                 inputTextArea.disabled = true; // 下のテキストボックスを無効化
             } else if (normalizedOriginal === normalizedInput) {
                 // 完全一致した場合
-                alert('正解です！');
+                resultDiv.textContent = '〇 正解です！';
+                resultDiv.className = 'result correct';
                 originalTextArea.classList.remove('invisible'); // 上のテキストを再び見えるように
                 inputTextArea.disabled = true; // 下のテキストボックスを無効化
             }
